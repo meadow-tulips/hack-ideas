@@ -1,6 +1,5 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import API from '../config/apiConfig';
-import Cookies from 'universal-cookie';
 import { post, get } from '../utils';
 
 
@@ -14,19 +13,34 @@ const ProfileContext = createContext({
 const GlobalProfileContext = ({ children }) => {
 
     const [profile, updateProfile] = useState({ id: null  });
+    const [loading, updateLoading] = useState(true)
+
+    useEffect(() => {
+        // To get if user is logged on hard reload
+        get({ url: API.LOGIN })
+        .then(res => {
+            updateProfile({id: res.data?.id ?? null });
+            updateLoading(false)
+        }).catch(err => {
+            updateLoading(false)
+        })
+    }, [])
+
+
 
     const onLogin = useCallback((val) => {
-        post({ url: API.USER, data: { id: val }})
+        updateLoading(true)
+        post({ url: API.LOGIN, data: { id: val }})
         .then(res => {
             updateProfile({id: res.data.id });
-            // const cookies = new Cookies();
-            // cookies.set('sessionId', res.data.sessionId)
+            updateLoading(false);
             return res;
-        }).then((res) => get({ url: API.HOME }))
-
-        // if(val === 'admin')
-        //     updateProfile({ id: val})
+        }).catch(err => {
+            updateLoading(false)
+        })
     }, [updateProfile]);
+
+
 
     const onLogout = useCallback(() => {
         updateProfile({ id: null })
@@ -34,6 +48,7 @@ const GlobalProfileContext = ({ children }) => {
 
     return <ProfileContext.Provider
                value={{
+                   loading,
                    profile,
                    onLogin,
                    onLogout

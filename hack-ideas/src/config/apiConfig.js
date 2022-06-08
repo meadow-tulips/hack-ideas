@@ -2,7 +2,7 @@
 const EXPRESS_URL = process.env.REACT_APP_EXPRESS_SERVER
 
 const API = {
-    USER: EXPRESS_URL + "/user",
+    LOGIN: EXPRESS_URL + "/login",
     HOME: EXPRESS_URL + "/"
 }
 
