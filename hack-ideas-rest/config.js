@@ -18,11 +18,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const fireStoreDB = getFirestore(app);
+
+export {
+  fireStoreDB
+}
 
 
-const querySnapshot = await getDocs(collection(db, "cities"));
-querySnapshot.forEach((doc) => {
-  // doc.data() is never undefined for query doc snapshots
-  console.log(doc.id, " => ", doc.data());
-});
+// const querySnapshot = await getDocs(collection(db, "cities"));
+// querySnapshot.forEach((doc) => {
+//   // doc.data() is never undefined for query doc snapshots
+//   console.log(doc.id, " => ", doc.data());
+// });

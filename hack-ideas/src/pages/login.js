@@ -32,9 +32,7 @@ const Login = () => {
 
     const handleSubmit = useCallback((event) => {
             event && event.preventDefault();
-            if(value === 'admin') {
-                _profileContext.onLogin(value)
-            }
+            _profileContext.onLogin(value)
     }, [value, _profileContext])
 
     return <StyledLoginWrapper>
