@@ -4,10 +4,11 @@ import styled from 'styled-components';
 const StyledErrorBoundary = styled.div`
     width: 100%;
     height: 100%;
-    > img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > p {
+      font-size: .85rem;
     }
 `
 class ErrorBoundary extends Component {
@@ -18,15 +19,14 @@ class ErrorBoundary extends Component {
   
     static getDerivedStateFromError(error) {
       // Update state so the next render will show the fallback UI.
-      return { hasError: true };
+      // return { hasError: true };
     }
   
   
     render() {
       if (this.state.hasError) {
-        const url = `/error/404.png`;
         return <StyledErrorBoundary>
-            <img src={url} alt="error-code" />
+              <p>Something went wrong ! (js error)</p>
         </StyledErrorBoundary>
       }
   

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Input from '../components/Input';
 import { ProfileContext } from '../contexts/profileContext';

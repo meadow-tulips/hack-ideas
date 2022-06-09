@@ -2,6 +2,7 @@ import express from 'express'
 import session from 'express-session';
 import cors from 'cors';
 import AppRoutes from './src/AppRoutes/index.js';
+import tranformMiddleware from './src/transform-middleware.js';
 const port = 5000
 
 const app = express();
@@ -40,28 +41,16 @@ app.use(cors(
   }
 ));
 
-app.use((req, res, next) => {
-  req.sessionStore.get(req.sessionID, (err, session) => {
-    if (err) next();
-    else {
-      if (req.session.user) {
-        res.locals.auth = true
-      } else {
-        res.locals.auth = false
-      }
-      next()
-    }
-  })
-})
 
 
-app.get('/', (req, res) => {
-  if (res.locals.auth)
-    res.status(200).json({ msg: "Hello World" });
+app.get('/', (req, res, next) => {
+  if (req.session?.user)
+    res.locals.data = { code: 200, response: "Hello World"};
   else {
-    res.status(200).json({ msg: 'No Hello' });
+    res.locals.data = { code: 200, response: "No Hello"};
   }
-})
+  next();
+}, tranformMiddleware)
 
 new AppRoutes(app);
 

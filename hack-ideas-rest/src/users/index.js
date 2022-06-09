@@ -1,8 +1,8 @@
-import cors from 'cors';
 import Service from "../service.js";
-import tranformMiddleware from "../transform-middleware.js";
-import { getFirestore, collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
+import authMiddleware from "../auth-middleware.js";
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
 import { fireStoreDB } from "../../config.js";
+import tranformMiddleware from "../transform-middleware.js";
 
 class UserService extends Service {
     constructor(app) {
@@ -16,12 +16,8 @@ class UserService extends Service {
     }
 
     getAuthenticatedUser () {
-        this.app.get('/login', async (req, res, next) => {
-            if(res.locals.auth) {
-                res.locals.data = { code: 200, response: req.session.user }
-            } else {
-                res.locals.data = { code: 200, response: null }
-            }
+        this.app.get(this.base_url, authMiddleware, async (req, res, next) => {
+            res.locals.data = { code: 200, response: req.session.user }
             next();
         }, tranformMiddleware)
     }
@@ -33,7 +29,6 @@ class UserService extends Service {
 
             if (!id) {
                 res.locals.data = { code: 400 };
-                next();
             } else {
                 const _usersCollection = collection(fireStoreDB, "users");
                 const documentRef = doc(_usersCollection, `/${id}`);
@@ -43,10 +38,9 @@ class UserService extends Service {
                     res.locals.data = { code: 200, response: fields }
                     req.session.user = { id }
                 } else
-                    res.locals.data = { code: 404 }
-                next();
+                    res.locals.data = { code: 404, response: "No user found." }
             }
-
+            next();
         }, tranformMiddleware)
     }
 }
