@@ -5,7 +5,7 @@ const authMiddleware = (req, res, next) => {
       if (!err && session?.user) {
         next();
       } else {
-        res.locals.data = { code: 403, response: null, status: "AUTH_FAILURE" };
+        res.locals.data = { code: 401, response: null, status: "AuthFailure" };
         tranformMiddleware(req, res, () => {})
       }
     })

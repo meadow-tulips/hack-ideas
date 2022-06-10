@@ -5,20 +5,21 @@ import { ChallengesContext } from "../contexts/challengesContext";
 const Dashboard = () => {
 
     const _challengesContext = useContext(ChallengesContext);
-    const { challenges, fetchChallenges, postChallenge } = _challengesContext || {};
+    const { challenges, fetchChallenges, postChallenge, upvoteChallenge, downvoteChallenge } = _challengesContext || {};
 
     useEffect(() => {
         fetchChallenges();
     }, [fetchChallenges])
 
-    console.log(challenges)
 
     return <div>
         <h3>Dashboard</h3>
-        {challenges.map(challenge => <div key={challenge.id}>
+        {challenges.map((challenge, index) => <div key={challenge.id}>
             <p>{challenge.title}</p>
             <p>{challenge.description}</p>
             <p>{challenge.user}</p>
+            <button onClick={() => upvoteChallenge(challenge.id, index)}>Upvote</button>
+            <button onClick={() => downvoteChallenge(challenge.id, index)}>Downvote</button>
         </div>)}
         <button onClick={postChallenge}>Add</button>
     </div>

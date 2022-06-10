@@ -13,7 +13,6 @@ const post = ({ url, data, headersParams }) => {
                 return res
             }
         })
-        .catch(err => err)
 }
 
 const get = ({ url, params, headersParams }) => {
@@ -26,12 +25,22 @@ const get = ({ url, params, headersParams }) => {
                 return res
             }
         })
-        .catch(err => {
-            throw err
+}
+
+const put = ({ url, data, headersParams }) => {
+    return fetch(url, { method: "PUT", credentials: 'include', body: JSON.stringify(data), headers: { ...headers, ...headersParams } })
+        .then(res => res.json())
+        .then(res => {
+            if (res.error) {
+                return Promise.reject(res);
+            } else {
+                return res
+            }
         })
 }
 
 export {
     get,
-    post
+    post,
+    put
 }

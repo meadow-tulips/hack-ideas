@@ -4,14 +4,19 @@ import Dashboard from "../pages/dashboard";
 import { useContext, useMemo } from "react";
 import { ProfileContext } from "../contexts/profileContext";
 import Page404 from "../pages/404";
+import TopNavigation from "../layouts/topNavigation";
 
 const PrivateWrapper = ({ isAuthenticated }) => {
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+    return isAuthenticated ?
+        <TopNavigation>
+            <Outlet />
+        </TopNavigation> :
+        <Navigate to="/login" />;
 };
 
 const AppRoutes = () => {
     const _profileContext = useContext(ProfileContext);
-    const isAuthenticated = useMemo(() =>  _profileContext.profile.id, [_profileContext.profile]);
+    const isAuthenticated = useMemo(() => _profileContext.profile.id, [_profileContext.profile]);
 
     return <Routes>
         <Route path="/login" element={isAuthenticated ? <Navigate to={"/"} /> : <Login />} />

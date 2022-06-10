@@ -2,7 +2,7 @@ const errorMessages = {
     400: "Bad Request",
     500: "Internal Service Error",
     403: "Unauthorized",
-    401: "UnAuthenticated",
+    401: "Unauthenticated",
     404: "Entity not found"
 }
 

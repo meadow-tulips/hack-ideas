@@ -46,6 +46,7 @@ const GlobalProfileContext = ({ children }) => {
 
 
     const onLogout = useCallback(() => {
+        console.log('called');
         updateProfile({ id: null })
         const cookies = new Cookies();
         cookies.remove('connect.sid');

@@ -37,7 +37,7 @@ class TagsService extends Service {
     }
 
     getTagByName() {
-        this.app.get(`${this.base_url}/:tagName`, async (req, res, next) => {
+        this.app.get(`${this.base_url}/:tagName`, authMiddleware, async (req, res, next) => {
             const { tagName } = req.params || {};
             findTagsByName(tagName)
             .then(({code, querySnapshot }) => {
