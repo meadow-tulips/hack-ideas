@@ -52,6 +52,15 @@ const StyledPagination = styled(Pagination)`
 
 `
 
+const NoData = styled.p`
+    text-align: center;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+`
+
 
 const Dashboard = () => {
 
@@ -79,37 +88,37 @@ const Dashboard = () => {
 
     return <StyledDashboard>
         <h3>Dashboard - Challenges</h3>
-        <SelectWrapper><MultiSelect onChange={onSortChange} value={sortFilter} options={SortOptions} placeholder='Sort by' className='sort-select' isMulti={false} /></SelectWrapper>
-        <TableWrapper>
-            <Table>
-                <thead>
-                    <TableRow>
-                        {tableHeaders.map(item => <CellHeader key={item}>{item}</CellHeader>)}
-                    </TableRow>
-                </thead>
-                <tbody>
-                    {challenges.map((challenge, index) => <TableRow key={challenge.id}>
-                        <StyledCell><Link to={`/challenge/${challenge.id}`}>{challenge.title}</Link></StyledCell>
-                        <StyledCell>{challenge.tags.map((tag, index) => (index !== 0 ? ", " : "") + tag.name)}</StyledCell>
-                        <StyledCell>
-                            <Voter ownVote={challenge.votes.ownVote} total={challenge.votes.total} onUpvote={() => upvoteChallenge(challenge.id, index)} onDownvote={() => downvoteChallenge(challenge.id, index)}></Voter>
-                            <p>{challenge.votes.ownVote === "0" ? 'Click to vote' : challenge.votes.ownVote === "-1" ? 'You downvoted' : ' You upvoted.'}</p>
-                        </StyledCell>
-                        <StyledCell>{challenge.user}</StyledCell>
-                        <StyledCell>{challenge.createdOn ? <>
-                            <StyledDateString>{new Date(challenge.createdOn.seconds * 1000).toLocaleDateString()}</StyledDateString>
-                            <div>{new Date(challenge.createdOn.seconds * 1000).toLocaleTimeString()}</div>
-                        </> : null}
-                        </StyledCell>
-                    </TableRow>)}
-                </tbody>
-            </Table>
-        </TableWrapper>
-        <StyledPagination
-            total={5}
-            current={pageFilter}
-            onSelect={onPageChange}
-        />
+            <SelectWrapper><MultiSelect onChange={onSortChange} value={sortFilter} options={SortOptions} placeholder='Sort by' className='sort-select' isMulti={false} /></SelectWrapper>
+            <TableWrapper>
+            {challenges.length ? <Table>
+                    <thead>
+                        <TableRow>
+                            {tableHeaders.map(item => <CellHeader key={item}>{item}</CellHeader>)}
+                        </TableRow>
+                    </thead>
+                    <tbody>
+                        {challenges.map((challenge, index) => <TableRow key={challenge.id}>
+                            <StyledCell><Link to={`/challenge/${challenge.id}`}>{challenge.title}</Link></StyledCell>
+                            <StyledCell>{challenge.tags.map((tag, index) => (index !== 0 ? ", " : "") + tag.name)}</StyledCell>
+                            <StyledCell>
+                                <Voter ownVote={challenge.votes.ownVote} total={challenge.votes.total} onUpvote={() => upvoteChallenge(challenge.id, index)} onDownvote={() => downvoteChallenge(challenge.id, index)}></Voter>
+                                <p>{challenge.votes.ownVote === "0" ? 'Click to vote' : challenge.votes.ownVote === "-1" ? 'You downvoted' : ' You upvoted.'}</p>
+                            </StyledCell>
+                            <StyledCell>{challenge.user}</StyledCell>
+                            <StyledCell>{challenge.createdOn ? <>
+                                <StyledDateString>{new Date(challenge.createdOn.seconds * 1000).toLocaleDateString()}</StyledDateString>
+                                <div>{new Date(challenge.createdOn.seconds * 1000).toLocaleTimeString()}</div>
+                            </> : null}
+                            </StyledCell>
+                        </TableRow>)}
+                    </tbody>
+                </Table> : <NoData>No data</NoData>}
+            </TableWrapper>
+            <StyledPagination
+                total={5}
+                current={pageFilter}
+                onSelect={onPageChange}
+            />
     </StyledDashboard>
 }
 
