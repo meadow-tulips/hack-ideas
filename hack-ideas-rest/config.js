@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore } from 'firebase/firestore/lite';
 import 'dotenv/config'
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -23,10 +23,3 @@ const fireStoreDB = getFirestore(app);
 export {
   fireStoreDB
 }
-
-
-// const querySnapshot = await getDocs(collection(db, "cities"));
-// querySnapshot.forEach((doc) => {
-//   // doc.data() is never undefined for query doc snapshots
-//   console.log(doc.id, " => ", doc.data());
-// });

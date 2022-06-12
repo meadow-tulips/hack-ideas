@@ -14,7 +14,7 @@ const onSuccess = (res) => {
 
 const onFailure = (res) => {
     const  { code = 400, status = "FAILURE", response } = res.locals.data || {}
-    return res.status(code).json({ code: code, status, error: response || errorMessages[code] })
+    return res.status(code).json({ code: code, status, error: { message: response || errorMessages[code]  }})
 }
 
 

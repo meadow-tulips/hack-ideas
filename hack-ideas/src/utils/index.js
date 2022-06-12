@@ -15,8 +15,9 @@ const post = ({ url, data, headersParams }) => {
         })
 }
 
-const get = ({ url, params, headersParams }) => {
-    return fetch(url, { method: "GET", credentials: 'include', headers: { ...headers, ...headersParams } })
+const get = ({ url, queryParams = {}, headersParams }) => {
+    const params = Object.keys(queryParams).length > 0 ? Object.keys(queryParams).reduce((params, key, index) => index === 0 ? params + `?${key}=${queryParams[key]}`: params + `&${key}=${queryParams[key]}`, ""): "";
+    return fetch(url + params, { method: "GET", credentials: 'include', headers: { ...headers, ...headersParams } })
         .then(res => res.json())
         .then(res => {
             if (res.error) {

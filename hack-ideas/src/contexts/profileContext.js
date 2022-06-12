@@ -1,7 +1,7 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
 import Cookies from 'universal-cookie'
 import API from '../config/apiConfig';
-import { post, get } from '../utils';
+import { post } from '../utils';
 
 
 const ProfileContext = createContext({
@@ -16,40 +16,30 @@ const ProfileContext = createContext({
 
 const GlobalProfileContext = ({ children }) => {
 
-    const [profile, updateProfile] = useState({ id: null });
-    const [loading, updateLoading] = useState(true)
-
-    useEffect(() => {
-        // To get if user is logged on hard reload
-        get({ url: API.LOGIN })
-            .then(res => {
-                updateProfile({ id: res.data?.id ?? null });
-                updateLoading(false)
-            })
-            .catch(_ => updateLoading(false))
-    }, [])
-
-
+    const [profile, updateProfile] = useState({ id: localStorage.getItem('profile') || null });
+    const [loading, updateLoading] = useState(false)
 
     const onLogin = useCallback((val) => {
         updateLoading(true)
-        post({ url: API.LOGIN, data: { id: val } })
+        return post({ url: API.LOGIN, data: { id: val } })
             .then(res => {
                 updateProfile({ id: res.data.id });
+                localStorage.setItem('profile', res.data.id)
                 updateLoading(false);
                 return res;
             }).catch(err => {
                 updateLoading(false)
+                throw err
             })
     }, [updateProfile]);
 
 
 
     const onLogout = useCallback(() => {
-        console.log('called');
         updateProfile({ id: null })
         const cookies = new Cookies();
         cookies.remove('connect.sid');
+        localStorage.setItem('profile', null)
     }, [updateProfile])
 
 
