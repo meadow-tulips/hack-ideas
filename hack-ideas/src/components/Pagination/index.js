@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import './index.css'
 import leftArrow from './icon-left-arrow.svg'
@@ -6,10 +6,20 @@ import rightArrow from './icon-right-arrow.svg'
 
 /* TODO: Logic to selectively show page numbers if there are too many pages */
 
-const noop = () => {}
+export default function Pagination ({ total, current, className = '', onSelect = () => {} }) {
 
-export default function Pagination (props) {
-  let { total, current } = props
+  const noop = useCallback(() => {}, []);
+  
+  const leftDisabled = useMemo(() => (current === 1), [current])
+  const rightDisabled = useMemo(() => current === total, [current, total]);
+
+  const ellipsis = useMemo(() =>  <span>&#8230;</span>, []);
+
+  const createClickHandler = useCallback(value => e => {
+    e && e.preventDefault()
+    onSelect(value)
+  }, [onSelect]);
+ 
   if (!Number.isInteger(total) || !Number.isInteger(current)) {
     return null
   }
@@ -22,28 +32,10 @@ export default function Pagination (props) {
   if (spliced.length) {
     pageNumbers.splice(5, 0, '...')
   }
-  let leftDisabled = (current === 1)
-  let rightDisabled = (current === total)
-  let clickHandler = props.onSelect || noop
-  let ellipsis = <span>&#8230;</span>
 
-  let pageNumberNotEditable = Boolean(props.pageNumberNotEditable) // Props for unwanted page number edit
-
-  const visitPageDirectly = (e) => {
-    if (e.which === 13) {
-      if (e.target.value >= 1 && e.target.value <= total) {
-        clickHandler(e.target.value)
-      }
-    }
-  }
-
-  const createClickHandler = value => e => {
-    e && e.preventDefault()
-    clickHandler(value)
-  }
 
   return (
-    <div className={`pagination ${props.className}`}>
+    <div className={`pagination ${className}`}>
       <button className={'pagination-button' + (leftDisabled ? ' pagination-button-disabled' : '')}
         onClick={!leftDisabled ? createClickHandler(current - 1) : noop}
       >
@@ -55,16 +47,11 @@ export default function Pagination (props) {
             (current === number ? ' pagination-button-highlighted' : '') +
             (Number.isFinite(number) ? '' : ' pagination-button-disabled')
           }
-          onClick={pageNumberNotEditable ? (Number.isFinite(number) ? createClickHandler(number) : null)
-            : (Number.isFinite(number) && current !== number ? createClickHandler(number) : null)}
+          onClick={createClickHandler(number)}
         >
           {
             Number.isFinite(number)
-              ? (
-                number === current && !pageNumberNotEditable
-                  ? <input className='current-page-number' type='number' defaultValue={number} min={1} max={total} onKeyDown={visitPageDirectly} />
-                  : number
-              )
+              ? number
               : ellipsis
           }
         </button>

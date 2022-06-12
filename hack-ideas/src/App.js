@@ -1,6 +1,6 @@
 import './App.css';
 import GlobalProfileContext from './contexts/profileContext';
-import ErrorBoundary from './pages/errorBoundary';
+import ErrorBoundary from './pages/ErrorBoundary';
 import AppRoutes from './routes';
 import OverlayLoader from "./components/OverlayLoader"
 import GlobalChallengesContext from './contexts/challengesContext';
